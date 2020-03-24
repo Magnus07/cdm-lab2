@@ -22,6 +22,8 @@ private slots:
 
     void on_lineEdit_textChanged(const QString &arg1);
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
 
@@ -34,8 +36,20 @@ private:
 
     void symmetrical();
 
+    void  reflective();
+
+    void transitive();
+
+    void linear();
+
+    void antisymmetric();
+
+    void asymmetric();
+
     void startTestCases();
 
     void returnState();
+
+    void antireflecive();
 };
 #endif // MAINWINDOW_H

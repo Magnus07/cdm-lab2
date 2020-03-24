@@ -40,7 +40,7 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 bool MainWindow::isSquare(QStringList input1, QStringList input2)
 {
     // якщо в обох масивах однакова кількість елементів
-   if (input1.length() == input2.length())
+    if (input1.length() == input2.length())
         return true;
     else
         return false;
@@ -56,8 +56,10 @@ void MainWindow::buildTable(QString input1, QString input2)
     QStringList inArr1 = input1.split(" ");
     QStringList inArr2 = input2.split(" ");
 
-    inArr1.removeAt(inArr1.length() - 1);
-    inArr2.removeAt(inArr2.length() - 1);
+    if (inArr1[inArr1.length() - 1] == "")
+        inArr1.removeAt(inArr1.length() - 1);
+    if (inArr2[inArr2.length() - 1] == "")
+        inArr2.removeAt(inArr2.length() - 1);
 
     // якщо матриця не квадратна
     if (!isSquare(inArr1, inArr2))
@@ -114,12 +116,24 @@ bool MainWindow::compare(int a, int b)
 void MainWindow::startTestCases()
 {
     symmetrical();
+    reflective();
+    transitive();
+    antireflecive();
+    antisymmetric();
+    asymmetric();
+    linear();
 }
 
 // Повернення у початковий стан
 void MainWindow::returnState()
 {
     ui->label_3->setText("SYMMETRICAL");
+    ui->label_4->setText("REFLECTIVE");
+    ui->label_5->setText("TRANSITIVE");
+    ui->label_6->setText("LINEAR");
+    ui->label_7->setText("ANTIREFLEXIVE");
+    ui->label_8->setText("ANTISYMMETRIC");
+    ui->label_9->setText("ASYMMETRIC");
 }
 
 
@@ -131,13 +145,124 @@ void MainWindow::symmetrical(){
 
     for (int i=0; i<rows; i++)
     {
-        for (int j=0; j<columns; j++)
+        for (int j=i; j<columns; j++)
         {   // якщо хоча б один не симетричний
-            if (ui->tableWidget->item(i,j) != ui->tableWidget->item(j,i)){
+            if (ui->tableWidget->item(i,j)->text() != ui->tableWidget->item(j,i)->text()){
                 ui->label_3->setText(ui->label_3->text() + " - ");
                 return;
             }
         }
 
     }
+    ui->label_3->setText(ui->label_3->text() + " + ");
+}
+
+void MainWindow::reflective(){
+    int rows = ui->tableWidget->rowCount();
+    // проходимо по головній діагоналі
+    for (int i=0; i<rows; i++){
+        if(ui->tableWidget->item(i,i)->text()=="0"){
+            ui->label_4->setText(ui->label_4->text() + " - ");return;
+        }
+    }
+    ui->label_4->setText(ui->label_4->text() + " + ");
+}
+
+void MainWindow::transitive(){
+    int rows = ui->tableWidget->rowCount();
+    int columns = ui->tableWidget->columnCount();
+    for(int i = 0; i <columns; i++) {
+        for(int j = 0; j < rows; j++) {
+            if(ui->tableWidget->item(i,j)->text()=="1") {
+                for(int g= 0; g < columns; g++) {
+                    if(ui->tableWidget->item(j,g)->text()=="1"&& ui->tableWidget->item(i,g)->text()=="0") {
+                        ui->label_5->setText(ui->label_5->text() + " - ");return;
+                    }
+                }
+            }
+        }
+    }
+    ui->label_5->setText(ui->label_5->text() + " + ");
+}
+
+void MainWindow::antireflecive(){
+    int rows = ui->tableWidget->rowCount();
+
+    // проходимо по головній діагоналі
+    for (int i=0; i<rows; i++){
+        if(ui->tableWidget->item(i,i)->text()=="1"){
+            ui->label_7->setText(ui->label_7->text() + " - ");return;
+        }
+    }
+    ui->label_7->setText(ui->label_7->text() + " + ");
+}
+
+void MainWindow::asymmetric(){
+    // отримуємо рядки і стовпці
+    int rows = ui->tableWidget->rowCount();
+    int columns = ui->tableWidget->columnCount();
+
+    for (int i=0; i<rows; i++)
+    {
+        for (int j=0; j<columns; j++){
+            if(i==j&&j==i){
+                if(ui->tableWidget->item(i,j)->text()=="1"){
+                    ui->label_9->setText(ui->label_9->text() + " - ");
+                    return;
+                }else continue;
+            }else continue;
+
+            if (ui->tableWidget->item(i,j)->text() != ui->tableWidget->item(j,i)->text()){
+                ui->label_9->setText(ui->label_9->text() + " + ");
+                return;
+            }
+        }
+    }
+    ui->label_9->setText(ui->label_9->text() + " + ");
+}
+
+void MainWindow::antisymmetric(){
+    // отримуємо рядки і стовпці
+    int rows = ui->tableWidget->rowCount();
+    int columns = ui->tableWidget->columnCount();
+
+    // перевірка головної діагоналі. Якщо усі нулі - це асиметричне відношення. Виключаємо цей варіант.
+    int n=0;
+    for(int k=0;k<rows;k++){
+        if(ui->tableWidget->item(k,k)->text()=="0"){
+            n++;
+        }
+    }
+    if(n==rows){
+        ui->label_8->setText(ui->label_8->text() + " - ");
+        return;
+    }
+
+
+    for (int i=0; i<rows; i++)
+    {
+        for (int j=0; j<columns; j++){
+            if (ui->tableWidget->item(i,j)->text() != ui->tableWidget->item(j,i)->text() ){
+                ui->label_8->setText(ui->label_8->text() + " + ");
+                return;
+            }
+        }
+    }
+    ui->label_8->setText(ui->label_8->text() + " - ");
+}
+
+
+// перевірка налінійність
+void MainWindow::linear(){
+    // якщо усі три вимоги виконуються
+    if (ui->label_8->text() == "ANTISYMMETRIC + " && ui->label_5->text() == "TRANSITIVE + " && ui->label_4->text() == "REFLECTIVE + ")
+        ui->label_6->setText(ui->label_6->text() + " + ");
+    else
+        ui->label_6->setText(ui->label_6->text() + " - ");
+}
+
+
+void MainWindow::on_comboBox_currentIndexChanged(int index)
+{
+    buildTable(ui->lineEdit->text(),ui->lineEdit_2->text());
 }
