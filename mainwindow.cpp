@@ -122,6 +122,9 @@ void MainWindow::startTestCases()
     antisymmetric();
     asymmetric();
     linear();
+    strictOrder();
+    tolerance();
+    equivalence();
 }
 
 // Повернення у початковий стан
@@ -134,6 +137,9 @@ void MainWindow::returnState()
     ui->label_7->setText("ANTIREFLEXIVE");
     ui->label_8->setText("ANTISYMMETRIC");
     ui->label_9->setText("ASYMMETRIC");
+    ui->label_11->setText("EQUIVALENCE");
+    ui->label_12->setText("TOLERANCE");
+    ui->label_13->setText("STRICT ORDERING");
 }
 
 
@@ -252,13 +258,42 @@ void MainWindow::antisymmetric(){
 }
 
 
-// перевірка налінійність
+// перевірка на лінійність
 void MainWindow::linear(){
     // якщо усі три вимоги виконуються
     if (ui->label_8->text() == "ANTISYMMETRIC + " && ui->label_5->text() == "TRANSITIVE + " && ui->label_4->text() == "REFLECTIVE + ")
         ui->label_6->setText(ui->label_6->text() + " + ");
     else
         ui->label_6->setText(ui->label_6->text() + " - ");
+}
+
+
+// перевірка на ЕКВІВАЛЕНТНІСТЬ
+void MainWindow::equivalence(){
+    // якщо усі три вимоги виконуються
+    if (ui->label_4->text() == "REFLECTIVE + " && ui->label_3->text() == "SYMMETRICAL + " && ui->label_5->text() == "TRANSITIVE + ")
+        ui->label_11->setText(ui->label_11->text() + " + ");
+    else
+        ui->label_11->setText(ui->label_11->text() + " - ");
+}
+
+// перевірка на толерантність
+void MainWindow::tolerance(){
+    // якщо усі вимоги виконуються
+    if (ui->label_4->text() == "REFLECTIVE + " && ui->label_3->text() == "SYMMETRICAL + ")
+        ui->label_12->setText(ui->label_12->text() + " + ");
+    else
+        ui->label_12->setText(ui->label_12->text() + " - ");
+}
+
+
+// перевірка на строгий порядок
+void MainWindow::strictOrder(){
+    // якщо усі три вимоги виконуються
+    if (ui->label_8->text() == "ANTISYMMETRIC + " && ui->label_5->text() == "TRANSITIVE + " && ui->label_7->text() == "ANTIREFLEXIVE + ")
+        ui->label_13->setText(ui->label_13->text() + " + ");
+    else
+        ui->label_13->setText(ui->label_13->text() + " - ");
 }
 
 

@@ -51,5 +51,11 @@ private:
     void returnState();
 
     void antireflecive();
+
+    void strictOrder();
+
+    void tolerance();
+
+    void equivalence();
 };
 #endif // MAINWINDOW_H
